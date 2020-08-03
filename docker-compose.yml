@@ -21,4 +21,3 @@ services:
       - "9000"
     volumes:
       - ./php7/php.ini:/usr/local/etc/php/conf.d/php.ini
-      - /mnt/d/02.Workspace/wsl.docker/source/web:/source
