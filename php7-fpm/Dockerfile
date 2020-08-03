@@ -2,7 +2,6 @@ FROM php:7.4-fpm
 
 RUN apt-get update && apt-get install -y \
     apt-utils \ 
-    curl \
     libfreetype6-dev \
     libjpeg-dev \
     libjpeg62-turbo-dev \
@@ -17,17 +16,27 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     libpq-dev \
     libmemcached-dev \
-    libzip-dev
+    libzip-dev \
+    libbz2-dev
 
+RUN docker-php-ext-install bz2
+RUN docker-php-ext-install curl
+RUN docker-php-ext-install fileinfo
+RUN docker-php-ext-install gettext
+RUN docker-php-ext-install mbstring
+RUN docker-php-ext-install mysqli
+
+# GD
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install mysqli
+    && docker-php-ext-install -j "$(nproc)" gd
 
-# RUN docker-php-ext-install mbstring
-# RUN docker-php-ext-install mysqli
-# RUN docker-php-ext-install pdo
-# RUN docker-php-ext-install pdo_mysql
-# RUN docker-php-ext-install opcache
+# RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+#     && docker-php-ext-install -j$(nproc) gd \
+#     && docker-php-ext-install mysqli
+    # && docker-php-ext-install mbstring \ 
+    # && docker-php-ext-install pdo \
+    # && docker-php-ext-install pdo_mysql \ 
+    # && docker-php-ext-install opcache
 
 # os에서 필요한 유틸 설치
 # RUN apt-get update -y && apt-get install -y apt-utils libzip-dev
@@ -81,17 +90,17 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 #     && docker-php-ext-install $MEMCACHED \
 #     && rm -rf $MEMCACHED
 
-# Configure PHP
-RUN echo "\
-max_execution_time = 1200\n\
-max_input_time = -1\n\
-memory_limit = 2048M\n\
-upload_max_filesize = 2048M\n\
-post_max_size = 2048M\n\
-max_file_uploads = 20\n\
-default_charset = \"UTF-8\"\n\
-date.timezone = \"Asia/Seoul\"\n\
-short_open_tag = On" > /usr/local/etc/php/php.ini
+# # Configure PHP
+# RUN echo "\
+# max_execution_time = 1200\n\
+# max_input_time = -1\n\
+# memory_limit = 2048M\n\
+# upload_max_filesize = 2048M\n\
+# post_max_size = 2048M\n\
+# max_file_uploads = 20\n\
+# default_charset = \"UTF-8\"\n\
+# date.timezone = \"Asia/Seoul\"\n\
+# short_open_tag = On" > /usr/local/etc/php/php.ini
 
 # RUN pecl install xdebug-2.7.0beta1     && docker-php-ext-enable xdebug
 # # Configure xDebug

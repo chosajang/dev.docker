@@ -20,7 +20,7 @@ services:
     depends_on:
       - php7-fpm
     volumes:
-      - /mnt/d/02.Workspace/wsl.docker/source/web:/source
+      - ./source/web:/source
       - ./nginx/api-server.conf:/etc/nginx/nginx.conf
 
   php7-fpm:
@@ -31,5 +31,5 @@ services:
     expose:
       - "9000"
     volumes:
-      - /mnt/d/02.Workspace/wsl.docker/source/web:/var/www/html
-      - ./php7-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./source/web:/source
+      # - ./php7-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
