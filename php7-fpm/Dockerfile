@@ -1,25 +1,33 @@
 FROM php:7.4-fpm
 
 RUN apt-get update && apt-get install -y \
-        libfreetype6-dev \
-        libjpeg-dev \
-        libjpeg62-turbo-dev \
-        libpng++-dev \ 
-        libwebp-dev \ 
-        libfreetype6-dev \ 
-        libvpx-dev \ 
-        libxpm-dev \ 
-        libmcrypt-dev \
-        libpng-dev \
-        libssl-dev \
-        libcurl4-openssl-dev \
-        libpq-dev \
-        libmemcached-dev \
-        libzip-dev
+    apt-utils \ 
+    curl \
+    libfreetype6-dev \
+    libjpeg-dev \
+    libjpeg62-turbo-dev \
+    libpng++-dev \ 
+    libwebp-dev \ 
+    libfreetype6-dev \ 
+    libvpx-dev \ 
+    libxpm-dev \ 
+    libmcrypt-dev \
+    libpng-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libpq-dev \
+    libmemcached-dev \
+    libzip-dev
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install mysqli
+
+# RUN docker-php-ext-install mbstring
+# RUN docker-php-ext-install mysqli
+# RUN docker-php-ext-install pdo
+# RUN docker-php-ext-install pdo_mysql
+# RUN docker-php-ext-install opcache
 
 # os에서 필요한 유틸 설치
 # RUN apt-get update -y && apt-get install -y apt-utils libzip-dev

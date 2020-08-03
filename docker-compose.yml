@@ -1,23 +1,35 @@
 version: '3.8'
 
 services:
-  apache:
-    container_name: apache
-    build:
-      context: ./apache/
-      dockerfile: Dockerfile
+  proxy-server:
+    container_name: proxy-server
+    image: nginx:latest
     ports:
-       - 80:80
-       - 443:443
-    volumes: 
-      - /mnt/d/02.Workspace/wsl.docker/source/web:/htdocs
+      - "80:80"
+      - "433:443"
+    depends_on:
+      - api-server
+    volumes:
+      - ./nginx/proxy-server.conf:/etc/nginx/nginx.conf
 
-  php:
-    container_name: php
+  api-server:
+    container_name: api-server
+    image: nginx:latest
+    expose:
+      - "8181"
+    depends_on:
+      - php7-fpm
+    volumes:
+      - /mnt/d/02.Workspace/wsl.docker/source/web:/source
+      - ./nginx/api-server.conf:/etc/nginx/nginx.conf
+
+  php7-fpm:
+    container_name: php7-fpm
     build: 
-      context: ./php7/
+      context: ./php7-fpm/
       dockerfile: Dockerfile
     expose:
       - "9000"
     volumes:
-      - ./php7/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - /mnt/d/02.Workspace/wsl.docker/source/web:/var/www/html
+      - ./php7-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
