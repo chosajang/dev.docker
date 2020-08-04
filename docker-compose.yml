@@ -8,28 +8,28 @@ services:
       - "80:80"
       - "433:443"
     depends_on:
-      - api-server
+      - api-service
     volumes:
       - ./nginx/proxy-server.conf:/etc/nginx/nginx.conf
 
-  api-server:
-    container_name: api-server
+  api-service:
+    container_name: api-service
     image: nginx:1.19
     expose:
       - "8181"
     depends_on:
-      - php7-fpm
+      - api-php-fpm
     volumes:
       - ./source/web:/source
-      - ./nginx/api-server.conf:/etc/nginx/nginx.conf
+      - ./nginx/api-service.conf:/etc/nginx/nginx.conf
 
-  php7-fpm:
-    container_name: php7-fpm
+  api-php-fpm:
+    container_name: api-php-fpm
     build: 
-      context: ./php7-fpm/
+      context: ./api-php-fpm/
       dockerfile: Dockerfile
     expose:
       - "9000"
     volumes:
       - ./source/web:/source
-      - ./php7-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./api-php-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
