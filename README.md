@@ -4,9 +4,9 @@
 ## docker-compose 관련 명령어
 ```
 // docker-compose 실행
- - 실행 옵션
-  > -d : 백그라운드 실행
-  > --build : 빌드(docker-compose.yml 문서 변경 시, 옵션 적용을 위해 꼭 빌드옵션을 사용한다)
+- 실행 옵션
+ > -d : 백그라운드 실행
+ > --build : 빌드(docker-compose.yml 문서 변경 시, 옵션 적용을 위해 꼭 빌드옵션을 사용한다)
 # docker-compose up -d --build
 
 // docker-compose 종료
@@ -20,7 +20,12 @@
 
 ```
 // 컨테이너 전체목록 확인
+- 옵션
+ > -a : 전체(미실행 컨테이너 포함)
+ > -q : 컨테이너 ID만 보기
 # docker ps -a
+
+# docker ps -a -q
 
 // 컨테이너 전체 삭제
 # docker rm `docker ps -a -q`
