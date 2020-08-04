@@ -3,12 +3,11 @@
 
 ## docker-compose 관련 명령어
 ```
-// docker-compose 실행(-d:백그라운드 실행)
-실행 옵션
--d : 백그라운드 실행
---build : 빌드(docker-compose.yml 문서 변경 시, 옵션 적용을 위해 꼭 빌드옵션을 사용한다)
-
-# docker-compose up -d 
+// docker-compose 실행
+ - 실행 옵션
+  > -d : 백그라운드 실행
+  > --build : 빌드(docker-compose.yml 문서 변경 시, 옵션 적용을 위해 꼭 빌드옵션을 사용한다)
+# docker-compose up -d --build
 
 // docker-compose 종료
 # docker-compose down
