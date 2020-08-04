@@ -3,7 +3,7 @@ version: '3.8'
 services:
   proxy-server:
     container_name: proxy-server
-    image: nginx:latest
+    image: nginx:1.19
     ports:
       - "80:80"
       - "433:443"
@@ -14,7 +14,7 @@ services:
 
   api-server:
     container_name: api-server
-    image: nginx:latest
+    image: nginx:1.19
     expose:
       - "8181"
     depends_on:
@@ -32,4 +32,4 @@ services:
       - "9000"
     volumes:
       - ./source/web:/source
-      # - ./php7-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./php7-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
