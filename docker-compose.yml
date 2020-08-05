@@ -20,8 +20,17 @@ services:
     depends_on:
       - api-php-fpm
     volumes:
-      - ./source/web:/source
+      - ./source/api:/source
       - ./nginx/api-service.conf:/etc/nginx/nginx.conf
+
+  web-service:
+    container_name: web-service
+    image: nginx:1.19
+    expose:
+      - "8282"
+    volumes:
+      - ./source/web:/source
+      - ./nginx/web-service.conf:/etc/nginx/nginx.conf
 
   api-php-fpm:
     container_name: api-php-fpm
