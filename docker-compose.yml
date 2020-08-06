@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # 프록시 서버
   proxy-server:
     container_name: proxy-server
     image: nginx:1.19
@@ -8,37 +9,75 @@ services:
       - "80:80"
       - "433:443"
     depends_on:
-      - api-service
+      - web-service1
+      - web-service2-1
+      - web-service2-2
+      - web-service2-bk
+      # - api-service1
     volumes:
       - ./nginx/proxy-server.conf:/etc/nginx/nginx.conf
 
-  api-service:
-    container_name: api-service
+  # WEB 서버 1
+  web-service1:
+    container_name: web-service1
     image: nginx:1.19
     expose:
-      - "8181"
-    depends_on:
-      - api-php-fpm
+      - "8081"
     volumes:
-      - ./source/api:/source
-      - ./nginx/api-service.conf:/etc/nginx/nginx.conf
-
-  web-service:
-    container_name: web-service
+      - ./source/web_1:/source
+      - ./nginx/web-service1.conf:/etc/nginx/nginx.conf
+    
+  # WEB 서버 2-1
+  web-service2-1:
+    container_name: web-service2-1
     image: nginx:1.19
     expose:
-      - "8282"
+      - "8082"
     volumes:
-      - ./source/web:/source
-      - ./nginx/web-service.conf:/etc/nginx/nginx.conf
+      - ./source/web_2_1:/source
+      - ./nginx/web-service2-1.conf:/etc/nginx/nginx.conf
 
-  api-php-fpm:
-    container_name: api-php-fpm
-    build: 
-      context: ./api-php-fpm/
-      dockerfile: Dockerfile
+  # WEB 서버 2-2
+  web-service2-2:
+    container_name: web-service2-2
+    image: nginx:1.19
     expose:
-      - "9000"
+      - "8083"
     volumes:
-      - ./source/web:/source
-      - ./api-php-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./source/web_2_2:/source
+      - ./nginx/web-service2-2.conf:/etc/nginx/nginx.conf
+
+  # WEB 서버 2-Backup
+  web-service2-bk:
+    container_name: web-service2-bk
+    image: nginx:1.19
+    expose:
+      - "8084"
+    volumes:
+      - ./source/web_2_bk:/source
+      - ./nginx/web-service2-bk.conf:/etc/nginx/nginx.conf
+  
+  # API 서버 1
+  # api-service:
+  #   container_name: api-service
+  #   image: nginx:1.19
+  #   expose:
+  #     - "8181"
+  #   depends_on:
+  #     - php7-fpm
+  #   volumes:
+  #     - ./source/api_1:/source
+  #     - ./nginx/api-service1.conf:/etc/nginx/nginx.conf
+
+  # API 서버에서 연동할 PHP7-FPM
+  # php7-fpm:
+  #   container_name: php7-fpm
+  #   build: 
+  #     context: ./php7-fpm/
+  #     dockerfile: Dockerfile
+  #   expose:
+  #     - "9000"
+  #   volumes:
+  #     - ./source/api_1:/source
+  #     - ./php7-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
+  #     # - ./php7-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
