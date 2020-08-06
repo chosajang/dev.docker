@@ -20,7 +20,8 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libmemcached-dev \
     libzip-dev \
-    libbz2-dev
+    libbz2-dev \
+    libxml2-dev
 
 RUN docker-php-ext-install bz2
 RUN docker-php-ext-install fileinfo
@@ -31,6 +32,7 @@ RUN docker-php-ext-install mysqli
 RUN docker-php-ext-install opcache
 RUN docker-php-ext-install iconv
 RUN docker-php-ext-install session
+RUN docker-php-ext-install xml
 
 # GD 설정 및 설치
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr \
