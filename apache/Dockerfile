@@ -1,4 +1,4 @@
-FROM httpd:latest
+FROM httpd:2.4
 
 # Common Install
 RUN apt-get update
