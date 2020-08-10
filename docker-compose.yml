@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  # 프록시 서버
-  proxy-server:
-    container_name: proxy-server
+  # 웹 프록시 서버
+  web-proxy-server:
+    container_name: web-proxy-server
     image: nginx:1.19
     ports:
       - "80:80"
@@ -13,9 +13,10 @@ services:
       - web-service2-1
       - web-service2-2
       - web-service2-bk
-      # - api-service1
     volumes:
-      - ./nginx/proxy-server.conf:/etc/nginx/nginx.conf
+      - ./nginx/web-proxy-server.conf:/etc/nginx/nginx.conf
+    environment:
+      - DOCKER_OPTS="--userland-proxy=false"
 
   # WEB 서버 1
   web-service1:
@@ -57,27 +58,62 @@ services:
       - ./source/web_2_bk:/source
       - ./nginx/web-service2-bk.conf:/etc/nginx/nginx.conf
   
-  # API 서버 1
-  # api-service:
-  #   container_name: api-service
-  #   image: nginx:1.19
-  #   expose:
-  #     - "8181"
-  #   depends_on:
-  #     - php7-fpm
-  #   volumes:
-  #     - ./source/api_1:/source
-  #     - ./nginx/api-service1.conf:/etc/nginx/nginx.conf
+  # API 프록시 서버
+  api-proxy-server:
+    container_name: api-proxy-server
+    image: nginx:1.19
+    ports:
+      - "81:81"
+    depends_on:
+      - api-service1
+      # - api-service2
+    volumes:
+      - ./nginx/api-proxy-server.conf:/etc/nginx/nginx.conf
 
-  # API 서버에서 연동할 PHP7-FPM
-  # php7-fpm:
-  #   container_name: php7-fpm
-  #   build: 
-  #     context: ./php7-fpm/
-  #     dockerfile: Dockerfile
-  #   expose:
-  #     - "9000"
-  #   volumes:
-  #     - ./source/api_1:/source
-  #     - ./php7-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
-  #     # - ./php7-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
+  # API 서비스 1
+  api-service1:
+    container_name: api-service1
+    image: nginx:1.19
+    expose:
+      - "8181"
+    depends_on:
+      - api-service1-php7-fpm
+    volumes:
+      - ./source/api_1:/source
+      - ./nginx/api-service1.conf:/etc/nginx/nginx.conf
+
+  # API 서비스1 PHP7-FPM
+  api-service1-php7-fpm:
+    container_name: api-service1-php7-fpm
+    build: 
+      context: ./php7-fpm/
+      dockerfile: Dockerfile
+    expose:
+      - "9000"
+    volumes:
+      - ./source/api_1:/source
+      - ./php7-fpm/api-service1-php.ini:/usr/local/etc/php/conf.d/php.ini
+
+  # API 서비스 2
+  api-service2:
+    container_name: api-service2
+    image: nginx:1.19
+    expose:
+      - "8182"
+    depends_on:
+      - api-service2-php7-fpm
+    volumes:
+      - ./source/api_2:/source
+      - ./nginx/api-service2.conf:/etc/nginx/nginx.conf
+  
+  # API 서비스2 PHP7-FPM
+  api-service2-php7-fpm:
+    container_name: api-service2-php7-fpm
+    build: 
+      context: ./php7-fpm/
+      dockerfile: Dockerfile
+    expose:
+      - "9000"
+    volumes:
+      - ./source/api_2:/source
+      - ./php7-fpm/api-service2-php.ini:/usr/local/etc/php/conf.d/php.ini
