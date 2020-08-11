@@ -9,6 +9,7 @@ services:
       - "80:80"
       - "433:443"
     depends_on:
+      - admin-service1
       - web-service1
       - web-service2-1
       - web-service2-2
@@ -17,6 +18,16 @@ services:
       - ./nginx/web-proxy-server.conf:/etc/nginx/nginx.conf
     environment:
       - DOCKER_OPTS="--userland-proxy=false"
+
+  # Admin Server
+  admin-service1:
+    container_name: admin-service1
+    image: nginx:1.19
+    expose:
+      - "8091"
+    volumes:
+      - D:\02.Workspace\coreui-vue\dist:/source
+      - ./nginx/admin-service1.conf:/etc/nginx/nginx.conf
 
   # WEB 서버 1
   web-service1:
