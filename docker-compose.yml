@@ -128,3 +128,24 @@ services:
     volumes:
       - ./source/api_2:/source
       - ./php7-fpm/api-service2-php.ini:/usr/local/etc/php/conf.d/php.ini
+
+  # MySQL 1
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    restart: always
+    ports:
+     - "3306:3306"
+    expose:
+     - "3306"
+    volumes:
+     - ./mysql/data:/var/lib/mysql
+     - ./mysql/config:/etc/mysql/conf.d
+    environment:
+     - MYSQL_ROOT_PASSWORD=fnxm@qlalfqjsgh2
+    command:
+     - --character-set-server=utf8mb4
+     - --collation-server=utf8mb4_unicode_ci
+     - --lower-case-table-names=1
+     - --innodb_use_native_aio=0
+     - --max-allowed-packet=1024M
