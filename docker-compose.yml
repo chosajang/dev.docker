@@ -14,6 +14,7 @@ services:
       - web-service2-1
       - web-service2-2
       - web-service2-bk
+      - web-service3
     volumes:
       - ./nginx/web-proxy-server.conf:/etc/nginx/nginx.conf
     environment:
@@ -68,6 +69,16 @@ services:
     volumes:
       - ./source/web_2_bk:/source
       - ./nginx/web-service2-bk.conf:/etc/nginx/nginx.conf
+  
+  # WEB 서버 3
+  web-service3:
+    container_name: web-service3
+    image: nginx:1.19
+    expose:
+      - "8083"
+    volumes:
+      - ./source/web_3:/source/web3
+      - ./nginx/web-service3.conf:/etc/nginx/nginx.conf
   
   # API 프록시 서버
   api-proxy-server:
