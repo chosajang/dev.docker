@@ -1,61 +1,74 @@
 version: '3.8'
 
 services:
-  # 웹 프록시 서버
-  web-proxy-server:
-    container_name: web-proxy-server
-    image: nginx:1.19
+  # Apache
+  apache-service:
+    container_name: apache-service
+    build: 
+      context: ./apache/
+      dockerfile: Dockerfile
     ports:
       - "80:80"
-      - "433:443"
-    depends_on:
-      - admin-service1
-      # - web-service1
-      # - web-service2-1
-      # - web-service2-2
-      # - web-service2-bk
-      # - web-service3
+      - "443:443"
     volumes:
-      - ./nginx/web-proxy-server.conf:/etc/nginx/nginx.conf
-    environment:
-      - DOCKER_OPTS="--userland-proxy=false"
+      - ../public-html:/usr/local/apache2/htdocs/
+      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+
+  # 웹 프록시 서버
+  # web-proxy-server:
+  #   container_name: web-proxy-server
+  #   image: nginx:1.19
+  #   ports:
+  #     - "80:80"
+  #     - "433:443"
+  #   depends_on:
+  #     - admin-service1
+  #     - web-service1
+  #     - web-service2-1
+  #     - web-service2-2
+  #     - web-service2-bk
+  #     - web-service3
+  #   volumes:
+  #     - ./nginx/web-proxy-server.conf:/etc/nginx/nginx.conf
+  #   environment:
+  #     - DOCKER_OPTS="--userland-proxy=false"
 
   # Admin Service
-  admin-service1:
-    container_name: admin-service1
-    image: nginx:1.19
-    expose:
-      - "8091"
-    depends_on:
-      - admin-service1-php7-fpm
-    volumes:
-      - ../wsd.test:/source
-      - ./nginx/admin-service1.conf:/etc/nginx/nginx.conf
+  # admin-service1:
+  #   container_name: admin-service1
+  #   image: nginx:1.19
+  #   expose:
+  #     - "8091"
+  #   depends_on:
+  #     - admin-service1-php7-fpm
+  #   volumes:
+  #     - ../wsd.test:/source
+  #     - ./nginx/admin-service1.conf:/etc/nginx/nginx.conf
   
   # Admin Service PHP7-FPM
-  admin-service1-php7-fpm:
-    container_name: admin-service1-php7-fpm
-    build: 
-      context: ./php7-fpm/
-      dockerfile: Dockerfile
-    expose:
-      - "9000"
-    volumes:
-      - ../wsd.test:/source
-      - ./php7-fpm/admin-service1-php.ini:/usr/local/etc/php/conf.d/php.ini
+  # admin-service1-php7-fpm:
+  #   container_name: admin-service1-php7-fpm
+  #   build: 
+  #     context: ./php7-fpm/
+  #     dockerfile: Dockerfile
+  #   expose:
+  #     - "9000"
+  #   volumes:
+  #     - ../wsd.test:/source
+  #     - ./php7-fpm/admin-service1-php.ini:/usr/local/etc/php/conf.d/php.ini
 
   # Node Server
-  node-server:
-    container_name: node-server
-    build:
-      context: ./node/
-      dockerfile: Dockerfile
-    expose:
-      - "3000"
-    ports:
-      - "3000:3000"
-    volumes: 
-      - ./source/node_app:/app
+  # node-server:
+  #   container_name: node-server
+  #   build:
+  #     context: ./node/
+  #     dockerfile: Dockerfile
+  #   expose:
+  #     - "3000"
+  #   ports:
+  #     - "3000:3000"
+  #   volumes: 
+  #     - ./source/node_app:/app
 
   # WEB 서버 1
   # web-service1:
@@ -168,22 +181,22 @@ services:
   #     - ./php7-fpm/api-service2-php.ini:/usr/local/etc/php/conf.d/php.ini
 
   # MySQL 1
-  mysql:
-    container_name: mysql
-    image: mysql:8.0
-    restart: always
-    ports:
-     - "3306:3306"
-    expose:
-     - "3306"
-    volumes:
-     - ./mysql/data:/var/lib/mysql
-     - ./mysql/config:/etc/mysql/conf.d
-    environment:
-     - MYSQL_ROOT_PASSWORD=fnxm@qlalfqjsgh2
-    command:
-     - --character-set-server=utf8mb4
-     - --collation-server=utf8mb4_unicode_ci
-     - --lower-case-table-names=1
-     - --innodb_use_native_aio=0
-     - --max-allowed-packet=1024M
+  # mysql:
+  #   container_name: mysql
+  #   image: mysql:8.0
+  #   restart: always
+  #   ports:
+  #    - "3306:3306"
+  #   expose:
+  #    - "3306"
+  #   volumes:
+  #    - ./mysql/data:/var/lib/mysql
+  #    - ./mysql/config:/etc/mysql/conf.d
+  #   environment:
+  #    - MYSQL_ROOT_PASSWORD=fnxm@qlalfqjsgh2
+  #   command:
+  #    - --character-set-server=utf8mb4
+  #    - --collation-server=utf8mb4_unicode_ci
+  #    - --lower-case-table-names=1
+  #    - --innodb_use_native_aio=0
+  #    - --max-allowed-packet=1024M
