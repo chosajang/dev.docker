@@ -10,135 +10,162 @@ services:
       - "433:443"
     depends_on:
       - admin-service1
-      - web-service1
-      - web-service2-1
-      - web-service2-2
-      - web-service2-bk
-      - web-service3
+      # - web-service1
+      # - web-service2-1
+      # - web-service2-2
+      # - web-service2-bk
+      # - web-service3
     volumes:
       - ./nginx/web-proxy-server.conf:/etc/nginx/nginx.conf
     environment:
       - DOCKER_OPTS="--userland-proxy=false"
 
-  # Admin Server
+  # Admin Service
   admin-service1:
     container_name: admin-service1
     image: nginx:1.19
     expose:
       - "8091"
+    depends_on:
+      - admin-service1-php7-fpm
     volumes:
-      - D:\02.Workspace\coreui-vue\dist:/source
+      - ../wsd.test:/source
       - ./nginx/admin-service1.conf:/etc/nginx/nginx.conf
+  
+  # Admin Service PHP7-FPM
+  admin-service1-php7-fpm:
+    container_name: admin-service1-php7-fpm
+    build: 
+      context: ./php7-fpm/
+      dockerfile: Dockerfile
+    expose:
+      - "9000"
+    volumes:
+      - ../wsd.test:/source
+      - ./php7-fpm/admin-service1-php.ini:/usr/local/etc/php/conf.d/php.ini
+
+  # Node Server
+  node-server:
+    container_name: node-server
+    build:
+      context: ./node/
+      dockerfile: Dockerfile
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    volumes: 
+      - ./source/node_app:/app
 
   # WEB 서버 1
-  web-service1:
-    container_name: web-service1
-    image: nginx:1.19
-    expose:
-      - "8081"
-    volumes:
-      - ./source/web_1:/source
-      - ./nginx/web-service1.conf:/etc/nginx/nginx.conf
+  # web-service1:
+  #   container_name: web-service1
+  #   image: nginx:1.19
+  #   expose:
+  #     - "8081"
+  #   volumes:
+  #     - ./source/web_1:/source
+  #     - ./nginx/web-service1.conf:/etc/nginx/nginx.conf
     
   # WEB 서버 2-1
-  web-service2-1:
-    container_name: web-service2-1
-    image: nginx:1.19
-    expose:
-      - "8082"
-    volumes:
-      - ./source/web_2_1:/source
-      - ./nginx/web-service2-1.conf:/etc/nginx/nginx.conf
+  # web-service2-1:
+  #   container_name: web-service2-1
+  #   image: nginx:1.19
+  #   expose:
+  #     - "8082"
+  #   volumes:
+  #     - ./source/web_2_1:/source
+  #     - ./nginx/web-service2-1.conf:/etc/nginx/nginx.conf
 
   # WEB 서버 2-2
-  web-service2-2:
-    container_name: web-service2-2
-    image: nginx:1.19
-    expose:
-      - "8083"
-    volumes:
-      - ./source/web_2_2:/source
-      - ./nginx/web-service2-2.conf:/etc/nginx/nginx.conf
+  # web-service2-2:
+  #   container_name: web-service2-2
+  #   image: nginx:1.19
+  #   expose:
+  #     - "8083"
+  #   volumes:
+  #     - ./source/web_2_2:/source
+  #     - ./nginx/web-service2-2.conf:/etc/nginx/nginx.conf
 
   # WEB 서버 2-Backup
-  web-service2-bk:
-    container_name: web-service2-bk
-    image: nginx:1.19
-    expose:
-      - "8084"
-    volumes:
-      - ./source/web_2_bk:/source
-      - ./nginx/web-service2-bk.conf:/etc/nginx/nginx.conf
+  # web-service2-bk:
+  #   container_name: web-service2-bk
+  #   image: nginx:1.19
+  #   expose:
+  #     - "8084"
+  #   volumes:
+  #     - ./source/web_2_bk:/source
+  #     - ./nginx/web-service2-bk.conf:/etc/nginx/nginx.conf
   
   # WEB 서버 3
-  web-service3:
-    container_name: web-service3
-    image: nginx:1.19
-    expose:
-      - "8083"
-    volumes:
-      - ./source/web_3:/source/web3
-      - ./nginx/web-service3.conf:/etc/nginx/nginx.conf
+  # web-service3:
+  #   container_name: web-service3
+  #   image: nginx:1.19
+  #   expose:
+  #     - "8083"
+  #   volumes:
+  #     - ./source/web_3:/source/web3
+  #     - ./nginx/web-service3.conf:/etc/nginx/nginx.conf
   
   # API 프록시 서버
-  api-proxy-server:
-    container_name: api-proxy-server
-    image: nginx:1.19
-    ports:
-      - "81:81"
-    depends_on:
-      - api-service1
-      # - api-service2
-    volumes:
-      - ./nginx/api-proxy-server.conf:/etc/nginx/nginx.conf
+  # api-proxy-server:
+  #   container_name: api-proxy-server
+  #   image: nginx:1.19
+  #   ports:
+  #     - "81:81"
+  #   depends_on:
+  #     - api-service1
+  #     # - api-service2
+  #   volumes:
+  #     - ./nginx/api-proxy-server.conf:/etc/nginx/nginx.conf
 
   # API 서비스 1
-  api-service1:
-    container_name: api-service1
-    image: nginx:1.19
-    expose:
-      - "8181"
-    depends_on:
-      - api-service1-php7-fpm
-    volumes:
-      - ./source/api_1:/source
-      - ./nginx/api-service1.conf:/etc/nginx/nginx.conf
+  # api-service1:
+  #   container_name: api-service1
+  #   image: nginx:1.19
+  #   expose:
+  #     - "8181"
+  #   depends_on:
+  #     - api-service1-php7-fpm
+  #   volumes:
+  #     - ./source/api_1:/source
+  #     - ./nginx/api-service1.conf:/etc/nginx/nginx.conf
 
   # API 서비스1 PHP7-FPM
-  api-service1-php7-fpm:
-    container_name: api-service1-php7-fpm
-    build: 
-      context: ./php7-fpm/
-      dockerfile: Dockerfile
-    expose:
-      - "9000"
-    volumes:
-      - ./source/api_1:/source
-      - ./php7-fpm/api-service1-php.ini:/usr/local/etc/php/conf.d/php.ini
+  # api-service1-php7-fpm:
+  #   container_name: api-service1-php7-fpm
+  #   build: 
+  #     context: ./php7-fpm/
+  #     dockerfile: Dockerfile
+  #   expose:
+  #     - "9000"
+  #   volumes:
+  #     - ./source/api_1:/source
+  #     - ./php7-fpm/api-service1-php.ini:/usr/local/etc/php/conf.d/php.ini
 
   # API 서비스 2
-  api-service2:
-    container_name: api-service2
-    image: nginx:1.19
-    expose:
-      - "8182"
-    depends_on:
-      - api-service2-php7-fpm
-    volumes:
-      - ./source/api_2:/source
-      - ./nginx/api-service2.conf:/etc/nginx/nginx.conf
+  # api-service2:
+  #   container_name: api-service2
+  #   image: nginx:1.19
+  #   expose:
+  #     - "8182"
+  #   depends_on:
+  #     - api-service2-php7-fpm
+  #   volumes:
+  #     - ./source/api_2:/source
+  #     - ./nginx/api-service2.conf:/etc/nginx/nginx.conf
   
   # API 서비스2 PHP7-FPM
-  api-service2-php7-fpm:
-    container_name: api-service2-php7-fpm
-    build: 
-      context: ./php7-fpm/
-      dockerfile: Dockerfile
-    expose:
-      - "9000"
-    volumes:
-      - ./source/api_2:/source
-      - ./php7-fpm/api-service2-php.ini:/usr/local/etc/php/conf.d/php.ini
+  # api-service2-php7-fpm:
+  #   container_name: api-service2-php7-fpm
+  #   build: 
+  #     context: ./php7-fpm/
+  #     dockerfile: Dockerfile
+  #   expose:
+  #     - "9000"
+  #   volumes:
+  #     - ./source/api_2:/source
+  #     - ./php7-fpm/api-service2-php.ini:/usr/local/etc/php/conf.d/php.ini
 
   # MySQL 1
   mysql:
