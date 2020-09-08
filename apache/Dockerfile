@@ -1,11 +1,28 @@
 FROM httpd:2.4
 
 # Common Install
-RUN apt-get update
-RUN apt-get install -y apt-utils
-RUN apt-get install -y software-properties-common
-RUN apt-get install -y vim
-RUN apt-get update
+RUN apt-get update && apt-get install -y \
+    apt-utils \
+    git \
+    wget \
+    libtool \
+    libfreetype6-dev \
+    libjpeg-dev \
+    libjpeg62-turbo-dev \
+    libpng++-dev \ 
+    libwebp-dev \ 
+    libfreetype6-dev \ 
+    libvpx-dev \ 
+    libxpm-dev \ 
+    libmcrypt-dev \
+    libpng-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libpq-dev \
+    libmemcached-dev \
+    libzip-dev \
+    libbz2-dev \
+    libxml2-dev
 
 # Apache Install
 RUN apt-get install -y php7.3 php7.3-common php7.3-cli
